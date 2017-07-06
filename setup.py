@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding:utf8 -*-
-from __future__ import absolute_import, unicode_literals
 from setuptools import setup, find_packages
 import os
 import codecs
@@ -36,13 +35,14 @@ def _fetch_package_version(filename):
 
 setup(
     name="idcfcloud-dns",
-    version=_fetch_package_version('./idcfcloud_dns.py'),
+    version=_fetch_package_version('src/idcfcloud_dns.py'),
     url='https://github.com/attakei/idcfcloud-dns',
     author='attakei',
     author_email='attakei@gmail.com',
     description='IDCF cloud DNS client',
     long_description=_fetch_readme('README.rst'),
-    packages=find_packages(exclude=['test*']),
+    packages=find_packages(),
+    package_dir={'': 'src'},
     license="MIT",
     classifiers=[
         'Programming Language :: Python :: 3',
