@@ -1,6 +1,5 @@
 # -*- coding:utf8 -*-
-"""Module for command line
-"""
+"""Module for command line."""
 import argparse
 
 
