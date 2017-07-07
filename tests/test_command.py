@@ -4,10 +4,12 @@
 from idcfcloud_dns import command
 
 
-class ParserTests(object):
+class TestParser(object):
     def test_has_command(self):
+        from argparse import Namespace
         try:
             args = command.parser.parse_args(['list'])
         except SytemExit:
             args = None
+        assert isinstance(args, Namespace)
         assert args.command == 'list'
