@@ -36,7 +36,7 @@ def _fetch_package_version(filename):
 
 setup(
     name="idcfcloud-dns",
-    version=_fetch_package_version('src/idcfcloud_dns.py'),
+    version=_fetch_package_version('src/idcfcloud_dns/__init__.py'),
     url='https://github.com/attakei/idcfcloud-dns',
     author='attakei',
     author_email='attakei@gmail.com',
