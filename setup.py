@@ -9,6 +9,10 @@ import re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
+_install_requires = [
+    'httplib2',
+]
+
 
 def _fetch_readme(filename):
     readme_path = os.path.join(HERE, filename)
@@ -50,4 +54,5 @@ setup(
         'Programming Language :: Python :: 2.7',
         'License :: OSI Approved :: MIT License',
     ],
+    install_requires=_install_requires,
 )
