@@ -1,0 +1,20 @@
+stages:
+  - lint
+  - unittest
+  - functest
+
+image: python:2.7-alpine
+
+
+flake8:
+  stage: lint
+  script:
+    - pip install flake8
+    - flake8 setup.py src/
+
+unittest_py27:
+  stage: unittest
+  script:
+    - pip install -q -r requirements-test.txt
+    - pip install -q -e .
+    - py.test -m "not with_network"
