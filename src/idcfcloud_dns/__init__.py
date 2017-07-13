@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf8 -*-
-"""TOp module."""
+"""Top module."""
 import os
 
 __version__ = '0.0.1'
