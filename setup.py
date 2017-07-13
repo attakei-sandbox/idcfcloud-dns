@@ -50,9 +50,11 @@ setup(
     package_dir={'': 'src'},
     license="MIT",
     classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Environment :: Console',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
-        'License :: OSI Approved :: MIT License',
     ],
     install_requires=_install_requires,
     entry_points={
