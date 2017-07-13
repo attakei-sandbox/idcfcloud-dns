@@ -1,6 +1,5 @@
 # -*- coding:utf8 -*-
-"""HTTP requests module
-"""
+"""HTTP requests module."""
 from __future__ import unicode_literals
 import hmac
 import hashlib

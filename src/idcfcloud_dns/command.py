@@ -14,6 +14,7 @@ parser.add_argument('command')
 
 
 def main(argv=None):
+    """Console entrypoint."""
     if argv is None:
         argv = sys.argv[1:]
     args = parser.parse_args(argv)
