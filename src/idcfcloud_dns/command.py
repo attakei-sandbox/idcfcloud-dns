@@ -6,10 +6,20 @@ import json
 import time
 import httplib2
 from .http import build_signature
+from . import find_settings
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('command')
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = parser.parse_args(argv)
+    setting = find_settings()
+    command = ListCommand(setting, args)
+    return command.run()
 
 
 class ListCommand(object):

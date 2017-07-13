@@ -55,4 +55,7 @@ setup(
         'License :: OSI Approved :: MIT License',
     ],
     install_requires=_install_requires,
+    entry_points={
+        'console_scripts': ['idcfcloud-dns=idcfcloud_dns.command:main'],
+    }
 )
