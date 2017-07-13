@@ -45,9 +45,13 @@ class ListCommand(object):
             data = json.loads(content)
             sys.stderr.write(data['message'])
             return 1
+        # TODO: No test
         if resp.status != 200:
             sys.stderr.write('Error\n')
             return 1
+        # If API return "HTTP OK" and response json,
+        # command render zone list (use domain)
+        # TODO: No test
         data = json.loads(content)
         for zone in data:
             sys.stdout.write(zone['name'] + '\n')
