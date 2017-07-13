@@ -9,6 +9,10 @@ import re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
+_install_requires = [
+    'httplib2',
+]
+
 
 def _fetch_readme(filename):
     readme_path = os.path.join(HERE, filename)
@@ -36,7 +40,7 @@ def _fetch_package_version(filename):
 
 setup(
     name="idcfcloud-dns",
-    version=_fetch_package_version('src/idcfcloud_dns.py'),
+    version=_fetch_package_version('src/idcfcloud_dns/__init__.py'),
     url='https://github.com/attakei/idcfcloud-dns',
     author='attakei',
     author_email='attakei@gmail.com',
@@ -50,4 +54,8 @@ setup(
         'Programming Language :: Python :: 2.7',
         'License :: OSI Approved :: MIT License',
     ],
+    install_requires=_install_requires,
+    entry_points={
+        'console_scripts': ['idcfcloud-dns=idcfcloud_dns.command:main'],
+    }
 )
