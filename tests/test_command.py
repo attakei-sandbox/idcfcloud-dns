@@ -2,6 +2,7 @@
 """Comannd base test
 """
 import pytest
+import os
 from mock import MagicMock
 from idcfcloud_dns import command
 
@@ -23,6 +24,8 @@ class TestListCommand(object):
         from argparse import Namespace
         cli_args = Namespace(command='llist')
         setting = MagicMock()
+        setting.api_key = os.environ['FUNCTEST_API_KEY']
+        setting.secret_key = os.environ['FUNCTEST_SECRET_KEY']
         cmd = command.ListCommand(setting, cli_args)
         ret = cmd.run()
         out, err = capsys.readouterr()

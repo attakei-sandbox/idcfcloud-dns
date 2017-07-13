@@ -18,3 +18,10 @@ unittest_py27:
     - pip install -q -r requirements-test.txt
     - pip install -q -e .
     - py.test -m "not with_network"
+
+functest:
+  stage: functest
+  script:
+    - pip install -q -r requirements-test.txt
+    - pip install -q -e .
+    - py.test -m with_network
