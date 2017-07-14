@@ -37,4 +37,4 @@ sdist:
     when: on_success
     name: "ver-$CI_COMMIT_TAG"
     paths:
-      - sdist/idcfcloud-dns-$CI_COMMIT_TAG.tar.gz
+      - dist/idcfcloud-dns-$CI_COMMIT_TAG.tar.gz
