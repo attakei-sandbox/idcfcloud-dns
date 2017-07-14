@@ -35,6 +35,6 @@ sdist:
     - python setup.py sdist
   artifacts:
     when: on_success
-    name: "ver-$CI_COMMIT_TAG"
+    name: "idcfcloud-dns-$CI_COMMIT_TAG_packages"
     paths:
       - dist/idcfcloud-dns-$CI_COMMIT_TAG.tar.gz
