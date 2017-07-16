@@ -37,6 +37,11 @@ class TestParser(object):
 
 
 class TestListCommand(object):
+    def _run_and_capture(self, command, capsys):
+        ret = command.run()
+        out, err = capsys.readouterr()
+        return ret, out, err
+
     @patch('httplib2.Http', MockedHttp)
     def test_no_zones(self, capsys):
         MockedHttp.content = []
@@ -44,8 +49,7 @@ class TestListCommand(object):
         cli_args = Namespace(command='llist')
         setting = dummy_settings()
         cmd = command.ListCommand(setting, cli_args)
-        ret = cmd.run()
-        out, err = capsys.readouterr()
+        ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 0
         assert out == ''
 
@@ -56,8 +60,7 @@ class TestListCommand(object):
         cli_args = Namespace(command='llist')
         setting = dummy_settings()
         cmd = command.ListCommand(setting, cli_args)
-        ret = cmd.run()
-        out, err = capsys.readouterr()
+        ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 0
         assert 'example.com' in out
 
@@ -69,8 +72,7 @@ class TestListCommand(object):
         setting.api_key = 'dummy_key'
         setting.secret_key = 'dummy_key'
         cmd = command.ListCommand(setting, cli_args)
-        ret = cmd.run()
+        ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 1
-        out, err = capsys.readouterr()
         assert out == ''
         assert err == 'invalid apikey'
