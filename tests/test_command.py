@@ -8,16 +8,6 @@ from mock import MagicMock, patch
 from idcfcloud_dns import command
 
 
-class MockedHttp(object):
-    content = []
-
-    def request(self, *args, **kwargs):
-        response = MagicMock()
-        response.status = 200
-        content = json.dumps(self.content)
-        return response, content
-
-
 def mocked_request(status, content):
     response = MagicMock()
     response.status = status
@@ -43,34 +33,37 @@ class TestParser(object):
         assert args.command == 'list'
 
 
-@patch('httplib2.Http', MockedHttp)
 class TestListCommand(object):
     def _run_and_capture(self, command, capsys):
         ret = command.run()
         out, err = capsys.readouterr()
         return ret, out, err
 
-    @patch('httplib2.Http', MockedHttp)
     def test_no_zones(self, capsys):
-        MockedHttp.content = []
         from argparse import Namespace
         cli_args = Namespace(command='llist')
         setting = dummy_settings()
-        cmd = command.ListCommand(setting, cli_args)
-        ret, out, err = self._run_and_capture(cmd, capsys)
+        mocked_content = []
+        with patch('httplib2.Http') as Mock:
+            inst = Mock.return_value
+            inst.request.return_value = mocked_request(200, mocked_content)
+            cmd = command.ListCommand(setting, cli_args)
+            ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 0
         assert out == ''
 
-    @patch('httplib2.Http', MockedHttp)
     def test_one_zone(self, capsys):
-        MockedHttp.content = [
-            {'name': 'example.com', 'description': 'My zone'}
-        ]
         from argparse import Namespace
         cli_args = Namespace(command='llist')
         setting = dummy_settings()
-        cmd = command.ListCommand(setting, cli_args)
-        ret, out, err = self._run_and_capture(cmd, capsys)
+        mocked_content = [
+            {'name': 'example.com', 'description': 'My zone'}
+        ]
+        with patch('httplib2.Http') as Mock:
+            inst = Mock.return_value
+            inst.request.return_value = mocked_request(200, mocked_content)
+            cmd = command.ListCommand(setting, cli_args)
+            ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 0
         assert 'example.com' in out
         assert 'My zone' in out
@@ -79,10 +72,11 @@ class TestListCommand(object):
         from argparse import Namespace
         cli_args = Namespace(command='list')
         setting = dummy_settings()
+        mocked_content = {'message': 'invalid apikey'}
         with patch('httplib2.Http') as Mock:
             inst = Mock.return_value
-            inst.request.return_value = mocked_request(401, {'message': 'invalid apikey'})
+            inst.request.return_value = mocked_request(401, mocked_content)
             cmd = command.ListCommand(setting, cli_args)
             ret, out, err = self._run_and_capture(cmd, capsys)
-            assert ret == 1
-            assert err == 'invalid apikey'
+        assert ret == 1
+        assert err == 'invalid apikey'
