@@ -30,3 +30,9 @@ Command-line
    $ export IDCF_DNS_API_KEY=your_api_key
    $ export IDCFDNS_SECRET_KEY=your_secret_key
    $ idcfcloud-dns list
+
+
+License
+=======
+
+MIT License. See `it <./LICENSE>`_
