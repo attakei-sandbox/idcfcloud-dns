@@ -65,5 +65,6 @@ class ListCommand(object):
         # TODO: No test
         data = json.loads(content)
         for zone in data:
-            sys.stdout.write(zone['name'] + '\n')
+            sys.stdout.write(
+                '{}\t{}\n'.format(zone['name'], zone['description']))
         return 0

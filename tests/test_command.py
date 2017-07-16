@@ -3,8 +3,26 @@
 """
 import pytest
 import os
-from mock import MagicMock
+import json
+from mock import MagicMock, patch
 from idcfcloud_dns import command
+
+
+class MockedHttp(object):
+    content = []
+
+    def request(self, *args, **kwargs):
+        response = MagicMock()
+        response.status = 200
+        content = json.dumps(self.content)
+        return response, content
+
+
+def dummy_settings():
+    setting = MagicMock()
+    setting.api_key = 'dummy_key'
+    setting.secret_key = 'dummy_key'
+    return setting
 
 
 class TestParser(object):
@@ -19,18 +37,35 @@ class TestParser(object):
 
 
 class TestListCommand(object):
-    @pytest.mark.with_network
+    def _run_and_capture(self, command, capsys):
+        ret = command.run()
+        out, err = capsys.readouterr()
+        return ret, out, err
+
+    @patch('httplib2.Http', MockedHttp)
     def test_no_zones(self, capsys):
+        MockedHttp.content = []
         from argparse import Namespace
         cli_args = Namespace(command='llist')
-        setting = MagicMock()
-        setting.api_key = os.environ['FUNCTEST_API_KEY']
-        setting.secret_key = os.environ['FUNCTEST_SECRET_KEY']
+        setting = dummy_settings()
         cmd = command.ListCommand(setting, cli_args)
-        ret = cmd.run()
-        out, err = capsys.readouterr()
+        ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 0
         assert out == ''
+
+    @patch('httplib2.Http', MockedHttp)
+    def test_one_zone(self, capsys):
+        MockedHttp.content = [
+            {'name': 'example.com', 'description': 'My zone'}
+        ]
+        from argparse import Namespace
+        cli_args = Namespace(command='llist')
+        setting = dummy_settings()
+        cmd = command.ListCommand(setting, cli_args)
+        ret, out, err = self._run_and_capture(cmd, capsys)
+        assert ret == 0
+        assert 'example.com' in out
+        assert 'My zone' in out
 
     @pytest.mark.with_network
     def test_invalid_key_pair(self, capsys):
@@ -40,8 +75,6 @@ class TestListCommand(object):
         setting.api_key = 'dummy_key'
         setting.secret_key = 'dummy_key'
         cmd = command.ListCommand(setting, cli_args)
-        ret = cmd.run()
+        ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 1
-        out, err = capsys.readouterr()
-        assert out == ''
         assert err == 'invalid apikey'

@@ -22,6 +22,9 @@ unittest_py27:
 
 functest:
   stage: functest
+  only:
+    - master
+    - tags
   script:
     - pip install -q -r requirements-test.txt
     - pip install -q -e .
