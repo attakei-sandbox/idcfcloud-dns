@@ -18,6 +18,13 @@ class MockedHttp(object):
         return response, content
 
 
+def mocked_request(status, content):
+    response = MagicMock()
+    response.status = status
+    content = json.dumps(content)
+    return response, content
+
+
 def dummy_settings():
     setting = MagicMock()
     setting.api_key = 'dummy_key'
@@ -36,6 +43,7 @@ class TestParser(object):
         assert args.command == 'list'
 
 
+@patch('httplib2.Http', MockedHttp)
 class TestListCommand(object):
     def _run_and_capture(self, command, capsys):
         ret = command.run()
@@ -67,14 +75,14 @@ class TestListCommand(object):
         assert 'example.com' in out
         assert 'My zone' in out
 
-    @pytest.mark.with_network
-    def test_invalid_key_pair(self, capsys):
+    def test_on_error(self, capsys):
         from argparse import Namespace
         cli_args = Namespace(command='list')
-        setting = MagicMock()
-        setting.api_key = 'dummy_key'
-        setting.secret_key = 'dummy_key'
-        cmd = command.ListCommand(setting, cli_args)
-        ret, out, err = self._run_and_capture(cmd, capsys)
-        assert ret == 1
-        assert err == 'invalid apikey'
+        setting = dummy_settings()
+        with patch('httplib2.Http') as Mock:
+            inst = Mock.return_value
+            inst.request.return_value = mocked_request(401, {'message': 'invalid apikey'})
+            cmd = command.ListCommand(setting, cli_args)
+            ret, out, err = self._run_and_capture(cmd, capsys)
+            assert ret == 1
+            assert err == 'invalid apikey'
