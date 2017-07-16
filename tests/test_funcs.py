@@ -10,22 +10,27 @@ import subprocess
 from mock import patch
 
 
+VALID_ENVS = {
+    'IDCF_DNS_API_KEY': os.environ['FUNCTEST_API_KEY'],
+    'IDCF_DNS_SECRET_KEY': os.environ['FUNCTEST_SECRET_KEY'],
+}
+
+INVALID_ENVS = {
+    'IDCF_DNS_API_KEY': os.environ['FUNCTEST_API_KEY'],
+    'IDCF_DNS_SECRET_KEY': os.environ['FUNCTEST_SECRET_KEY'],
+}
+
+
 @pytest.mark.functest
 class TestListCommand(object):
-    @patch.dict('os.environ', 
-        {   'IDCF_DNS_API_KEY': os.environ['FUNCTEST_API_KEY'],
-            'IDCF_DNS_SECRET_KEY': os.environ['FUNCTEST_SECRET_KEY'],
-        })
+    @patch.dict('os.environ', VALID_ENVS)
     @patch.object(sys, 'argv', ['_', 'list'])
     def test_no_zones(self, capsys):
         from idcfcloud_dns.command import main
         ret = main()
         assert ret == 0
 
-    @patch.dict('os.environ', 
-        {   'IDCF_DNS_API_KEY': 'dummy_api_key',
-            'IDCF_DNS_SECRET_KEY': 'dummy_secret_key',
-        })
+    @patch.dict('os.environ', INVALID_ENVS)
     @patch.object(sys, 'argv', ['_', 'list'])
     def test_invalid_apikey(self, capsys):
         from idcfcloud_dns.command import main
