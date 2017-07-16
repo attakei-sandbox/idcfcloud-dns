@@ -9,10 +9,12 @@ from idcfcloud_dns import command
 
 
 class MockedHttp(object):
+    content = []
+
     def request(self, *args, **kwargs):
         response = MagicMock()
         response.status = 200
-        content = json.dumps([])
+        content = json.dumps(self.content)
         return response, content
 
 
@@ -30,6 +32,7 @@ class TestParser(object):
 class TestListCommand(object):
     @patch('httplib2.Http', MockedHttp)
     def test_no_zones(self, capsys):
+        MockedHttp.content = []
         from argparse import Namespace
         cli_args = Namespace(command='llist')
         setting = MagicMock()
@@ -40,6 +43,20 @@ class TestListCommand(object):
         out, err = capsys.readouterr()
         assert ret == 0
         assert out == ''
+
+    @patch('httplib2.Http', MockedHttp)
+    def test_one_zone(self, capsys):
+        MockedHttp.content = [{'name': 'example.com'}]
+        from argparse import Namespace
+        cli_args = Namespace(command='llist')
+        setting = MagicMock()
+        setting.api_key = 'dummy_key'
+        setting.secret_key = 'dummy_key'
+        cmd = command.ListCommand(setting, cli_args)
+        ret = cmd.run()
+        out, err = capsys.readouterr()
+        assert ret == 0
+        assert 'example.com' in out
 
     @pytest.mark.with_network
     def test_invalid_key_pair(self, capsys):
