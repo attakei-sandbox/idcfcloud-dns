@@ -3,8 +3,17 @@
 """
 import pytest
 import os
-from mock import MagicMock
+import json
+from mock import MagicMock, patch
 from idcfcloud_dns import command
+
+
+class MockedHttp(object):
+    def request(self, *args, **kwargs):
+        response = MagicMock()
+        response.status = 200
+        content = json.dumps([])
+        return response, content
 
 
 class TestParser(object):
@@ -19,13 +28,13 @@ class TestParser(object):
 
 
 class TestListCommand(object):
-    @pytest.mark.with_network
+    @patch('httplib2.Http', MockedHttp)
     def test_no_zones(self, capsys):
         from argparse import Namespace
         cli_args = Namespace(command='llist')
         setting = MagicMock()
-        setting.api_key = os.environ['FUNCTEST_API_KEY']
-        setting.secret_key = os.environ['FUNCTEST_SECRET_KEY']
+        setting.api_key = 'dummy_key'
+        setting.secret_key = 'dummy_key'
         cmd = command.ListCommand(setting, cli_args)
         ret = cmd.run()
         out, err = capsys.readouterr()
