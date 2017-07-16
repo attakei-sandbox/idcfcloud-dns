@@ -11,7 +11,7 @@ Installation
 
 .. code-block:: bash
 
-   $ pip install git@github.com:attakei/idcfcloud-dns.git
+   $ pip install git@gitlab.com:attakei/idcfcloud-dns.git
 
 
 Usage
