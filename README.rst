@@ -32,6 +32,11 @@ Command-line
    $ idcfcloud-dns list
 
 
+Change logs
+===========
+
+See `CHANGES.rst <CHANGES.rst>`_
+
 License
 =======
 
