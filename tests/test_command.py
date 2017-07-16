@@ -55,7 +55,9 @@ class TestListCommand(object):
 
     @patch('httplib2.Http', MockedHttp)
     def test_one_zone(self, capsys):
-        MockedHttp.content = [{'name': 'example.com'}]
+        MockedHttp.content = [
+            {'name': 'example.com', 'description': 'My zone'}
+        ]
         from argparse import Namespace
         cli_args = Namespace(command='llist')
         setting = dummy_settings()
@@ -63,6 +65,7 @@ class TestListCommand(object):
         ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 0
         assert 'example.com' in out
+        assert 'My zone' in out
 
     @pytest.mark.with_network
     def test_invalid_key_pair(self, capsys):
@@ -74,5 +77,4 @@ class TestListCommand(object):
         cmd = command.ListCommand(setting, cli_args)
         ret, out, err = self._run_and_capture(cmd, capsys)
         assert ret == 1
-        assert out == ''
         assert err == 'invalid apikey'
