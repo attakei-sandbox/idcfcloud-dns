@@ -18,6 +18,13 @@ class MockedHttp(object):
         return response, content
 
 
+def dummy_settings():
+    setting = MagicMock()
+    setting.api_key = 'dummy_key'
+    setting.secret_key = 'dummy_key'
+    return setting
+
+
 class TestParser(object):
     def test_has_command(self):
         from argparse import Namespace
@@ -35,9 +42,7 @@ class TestListCommand(object):
         MockedHttp.content = []
         from argparse import Namespace
         cli_args = Namespace(command='llist')
-        setting = MagicMock()
-        setting.api_key = 'dummy_key'
-        setting.secret_key = 'dummy_key'
+        setting = dummy_settings()
         cmd = command.ListCommand(setting, cli_args)
         ret = cmd.run()
         out, err = capsys.readouterr()
@@ -49,9 +54,7 @@ class TestListCommand(object):
         MockedHttp.content = [{'name': 'example.com'}]
         from argparse import Namespace
         cli_args = Namespace(command='llist')
-        setting = MagicMock()
-        setting.api_key = 'dummy_key'
-        setting.secret_key = 'dummy_key'
+        setting = dummy_settings()
         cmd = command.ListCommand(setting, cli_args)
         ret = cmd.run()
         out, err = capsys.readouterr()
