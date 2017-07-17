@@ -11,13 +11,13 @@ from mock import patch
 
 
 VALID_ENVS = {
-    'IDCF_DNS_API_KEY': os.environ['FUNCTEST_API_KEY'],
-    'IDCF_DNS_SECRET_KEY': os.environ['FUNCTEST_SECRET_KEY'],
+    'IDCF_DNS_API_KEY': os.environ.get('FUNCTEST_API_KEY', 'apikey'),
+    'IDCF_DNS_SECRET_KEY': os.environ.get('FUNCTEST_SECRET_KEY', 'secret'),
 }
 
 INVALID_ENVS = {
-    'IDCF_DNS_API_KEY': os.environ['FUNCTEST_API_KEY'],
-    'IDCF_DNS_SECRET_KEY': os.environ['FUNCTEST_SECRET_KEY'],
+    'IDCF_DNS_API_KEY': 'dummy_api_key',
+    'IDCF_DNS_SECRET_KEY': 'dummy_secret_key',
 }
 
 
