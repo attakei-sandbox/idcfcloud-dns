@@ -30,6 +30,17 @@ functest:
     - pip install -q -e .
     - py.test -m functest
 
+functest_manually:
+  stage: functest
+  except:
+    - master
+    - tags
+  script:
+    - pip install -q -r requirements-test.txt
+    - pip install -q -e .
+    - py.test -m functest
+  when: manual
+
 sdist:
   stage: build
   only:
